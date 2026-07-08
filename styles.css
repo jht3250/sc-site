@@ -690,7 +690,6 @@ img {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-style: italic;
     position: relative;
 }
 
@@ -3060,10 +3059,11 @@ a.contact-value:hover {
    ============================================ */
 
 /* Lock body scroll when modal is open */
-body.modal-open,
-html:has(.doctor-modal.active) {
+body.modal-open {
     overflow: hidden !important;
-    height: 100% !important;
+    position: fixed;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 .doctor-modal {
@@ -3170,10 +3170,12 @@ html:has(.doctor-modal.active) {
     color: var(--blue-600);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-family: 'Quicksand';
 }
 
 .modal-body {
     padding: 2rem 2.5rem 2.5rem;
+    
 }
 
 .modal-body p {
@@ -3181,6 +3183,7 @@ html:has(.doctor-modal.active) {
     line-height: 1.8;
     margin-bottom: 1.25rem;
     font-size: 1.05rem;
+    font-family: 'Quicksand';
 }
 
 .modal-body p:last-of-type {

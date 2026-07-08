@@ -551,10 +551,13 @@ function initDoctorModals() {
 
     // Open modal - use class 'active' for CSS flexbox centering
     teamCards.forEach(function(card) {
-        card.onclick = function() {
+        card.onclick = function(e) {
+            e.preventDefault();
             var modalId = this.getAttribute('data-modal');
             var modal = document.getElementById('modal-' + modalId);
             if (modal) {
+                var scrollY = window.scrollY;
+                document.body.style.top = '-' + scrollY + 'px';
                 document.body.classList.add('modal-open');
                 modal.classList.add('active');
                 // Scroll modal content to top
@@ -566,8 +569,13 @@ function initDoctorModals() {
 
     // Close modal function
     function closeModal(modal) {
+        var scrollY = parseInt(document.body.style.top || '0') * -1;
+        document.body.style.top = '';
         modal.classList.remove('active');
         document.body.classList.remove('modal-open');
+        document.documentElement.style.scrollBehavior = 'auto';
+        window.scrollTo(0, scrollY);
+        document.documentElement.style.scrollBehavior = '';
     }
 
     // Close button
