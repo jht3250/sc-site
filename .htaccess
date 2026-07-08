@@ -1,0 +1,18 @@
+# ── Security hardening ──────────────────────────────────────────────
+# Disable directory listings
+Options -Indexes
+
+# Security response headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # HSTS — only meaningful over HTTPS (site is HTTPS via Cloudflare)
+    Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains"
+</IfModule>
+
+# Block access to sensitive file types
+<FilesMatch "\.(bak|sql|ini|log|sh|inc|conf|env)$">
+    Require all denied
+</FilesMatch>
