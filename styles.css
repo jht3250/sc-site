@@ -251,8 +251,7 @@ img {
    NAVIGATION - Glassmorphism Style
    ============================================ */
 .nav {
-    position: sticky;
-    position: -webkit-sticky;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -521,7 +520,7 @@ img {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
-    padding: 2rem var(--container-padding) var(--section-padding);
+    padding: calc(2rem + 80px) var(--container-padding) var(--section-padding);
     max-width: var(--container-max);
     margin: 0 auto;
     overflow: visible;

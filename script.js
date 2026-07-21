@@ -941,12 +941,28 @@ function initGallerySlider() {
         }
     }, { passive: true });
 
-    // Auto-play (optional - every 5 seconds)
-    let autoPlayInterval = setInterval(nextSlide, 5000);
+    // Auto-play only when slider is in view
+    let autoPlayInterval = null;
+
+    const visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (!autoPlayInterval) {
+                    autoPlayInterval = setInterval(nextSlide, 5000);
+                }
+            } else {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        });
+    }, { threshold: 0.3 });
+
+    visibilityObserver.observe(slider);
 
     // Pause on hover
     slider.addEventListener('mouseenter', () => {
         clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
     });
 
     slider.addEventListener('mouseleave', () => {
@@ -1086,49 +1102,37 @@ function initCookieConsent() {
         // Show banner after a short delay
         setTimeout(() => {
             banner.classList.add('show');
+            // Disable the floating contact button so it can't intercept taps
+            const floatContact = document.getElementById('floating-contact');
+            if (floatContact) floatContact.style.pointerEvents = 'none';
         }, 1500);
     }
 
-    // Helper function to handle both click and touch
-    function addButtonHandler(btn, callback) {
-        if (!btn) return;
+    function dismiss() {
+        banner.classList.remove('show');
+        // Restore floating contact interactivity
+        const floatContact = document.getElementById('floating-contact');
+        if (floatContact) floatContact.style.pointerEvents = '';
+    }
 
-        let handled = false;
-
-        // Prevent double-firing on touch devices
-        btn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            if (!handled) {
-                handled = true;
-                callback();
-                setTimeout(() => handled = false, 300);
-            }
-        }, { passive: false });
-
-        btn.addEventListener('click', (e) => {
-            if (!handled) {
-                handled = true;
-                callback();
-                setTimeout(() => handled = false, 300);
+    // Accept cookies
+    if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'accepted');
+            dismiss();
+            if (window.dataLayer) {
+                window.dataLayer.push({'event': 'cookie_consent_given'});
             }
         });
     }
 
-    // Accept cookies
-    addButtonHandler(acceptBtn, () => {
-        localStorage.setItem('cookieConsent', 'accepted');
-        banner.classList.remove('show');
-        // Enable tracking (GTM is already loaded, this just records consent)
-        if (window.dataLayer) {
-            window.dataLayer.push({'event': 'cookie_consent_given'});
-        }
-    });
-
     // Decline cookies
-    addButtonHandler(declineBtn, () => {
-        localStorage.setItem('cookieConsent', 'declined');
-        banner.classList.remove('show');
-    });
+    if (declineBtn) {
+        declineBtn.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'declined');
+            dismiss();
+        });
+    }
 }
 
 // Initialize cookie consent
