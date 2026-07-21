@@ -714,10 +714,10 @@ function initHeroVideoPlaylist() {
 
     // List of videos to play in sequence (secretary videos first, tour last)
     const videos = [
-        'assets/videos/DentalSecrateryOffice.mov',
-        'assets/videos/DentalPractise.mov',
-        'assets/videos/DentalPractiseBetter.mov',
-        'assets/videos/DentalofficeTour.MOV'
+        'assets/videos/DentalSecrateryOffice.mp4',
+        'assets/videos/DentalPractise.mp4',
+        'assets/videos/DentalPractiseBetter.mp4',
+        'assets/videos/DentalofficeTour.mp4'
     ];
 
     let currentIndex = 0;
